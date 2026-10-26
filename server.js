@@ -1,5 +1,5 @@
 const http = require("http");
-//const express = require("express");
+const { logRequest } = require("./utils/logger");
 const PORT = process.env.PORT || 3000;
 const URL_PREFIX = (process.env.URL_PREFIX || "").replace(/\/$/, "");
 const MAX_BODY_BYTES = 10 * 1024;
@@ -12,7 +12,7 @@ let nextId = 1;
 
 function sendJson(res, code, body) {
   res.writeHead(code, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(body);
+  res.end(JSON.stringify(body));
 }
 
 function readJson(req, cb) {
@@ -215,6 +215,8 @@ function renderPage() {
 }
 
 const server = http.createServer((req, res) => {
+  logRequest(req);
+
   // Strip the prefix before route matching (query string removed first)
   let path = req.url.split("?")[0];
   if (URL_PREFIX) {
