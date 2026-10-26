@@ -15,8 +15,8 @@ on:
     branches: [ main ]
 
 env:
-  APP_NAME: ghafailtest
-  DOCKER_IMAGE: jaykumark7/ghafailtest
+  APP_NAME: njsfailtest
+  DOCKER_IMAGE: jaykumark7/njsfailtest
   DEPLOY_ENV: dev
   DEPLOY_NAMESPACE: dev
   APP_PORT: "3000"
@@ -61,6 +61,20 @@ jobs:
       - name: Run Tests
         run: |
           npm test
+
+      # Smoke test: actually load and start the app so missing modules / runtime
+      # require errors fail CI (node --check only validates syntax)
+      - name: Smoke Test (start app)
+        run: |
+          set +e
+          PORT=3999 timeout 5s node server.js
+          code=$?
+          if [ $code -eq 124 ]; then
+            echo "App started and stayed up for 5s"
+          else
+            echo "::error file=server.js::Application failed to start (exit code $code)"
+            exit $code
+          fi
 
       # SonarQube — language-specific flags for nodejs
       - name: SonarQube Analysis
