@@ -1,5 +1,5 @@
 const http = require("http");
-const { logRequest } = require("./utils/logger");
+//const express = require("express");
 const PORT = process.env.PORT || 3000;
 const URL_PREFIX = (process.env.URL_PREFIX || "").replace(/\/$/, "");
 const MAX_BODY_BYTES = 10 * 1024;
@@ -215,8 +215,6 @@ function renderPage() {
 }
 
 const server = http.createServer((req, res) => {
-  logRequest(req);
-
   // Strip the prefix before route matching (query string removed first)
   let path = req.url.split("?")[0];
   if (URL_PREFIX) {
