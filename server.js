@@ -12,7 +12,7 @@ let nextId = 1;
 
 function sendJson(res, code, body) {
   res.writeHead(code, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(body));
+  res.end(JSON.stringify(body);
 }
 
 function readJson(req, cb) {
